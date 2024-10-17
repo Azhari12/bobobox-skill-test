@@ -17,7 +17,10 @@ const MainPage = () => {
 	const [category, setCategory] = useState("all");
 	const [searchQuery, setSearchQuery] = useState("");
 
+	const [loading, setLoading] = useState(false);
+
 	const getData = () => {
+		setLoading(true);
 		fetch("/src/data/dummy-data.json", {
 			headers: {
 				"Content-Type": "application/json",
@@ -32,6 +35,7 @@ const MainPage = () => {
 				const dataProduct = data.products;
 				setData(dataProduct);
 			});
+		setLoading(false);
 	};
 
 	useEffect(() => {
@@ -86,7 +90,7 @@ const MainPage = () => {
 					/>
 				</div>
 			</motion.div>
-			<HeroParallax products={data} />;
+			{loading ? "Loading...." : <HeroParallax products={data} />}
 			{/* <BentoGrid className="max-w-4xl mx-auto">
 				{data.map((item, i) => (
 					<BentoGridItem
