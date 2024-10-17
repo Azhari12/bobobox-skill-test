@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
 	motion,
 	useScroll,
@@ -13,6 +13,9 @@ import { BentoGridItem } from "./bento-grid";
 
 export const HeroParallax = ({ products }: { products: ProductType[] }) => {
 	const ref = React.useRef(null);
+
+	const [wishlistData, setwishlistData] = useState<number[]>([]);
+
 	const { scrollYProgress } = useScroll({
 		target: ref,
 		offset: ["start start", "end start"],
@@ -33,14 +36,19 @@ export const HeroParallax = ({ products }: { products: ProductType[] }) => {
 		springConfig
 	);
 	const translateY = useSpring(
-		useTransform(scrollYProgress, [0, 0.2], [-2000, 500]),
+		useTransform(scrollYProgress, [0, 0.2], [-2000, 600]),
 		springConfig
 	);
+
+	useEffect(() => {
+		const storedWhislist = localStorage.getItem("whislist");
+		setwishlistData(storedWhislist ? JSON.parse(storedWhislist) : []);
+	}, []);
 
 	return (
 		<div
 			ref={ref}
-			className="pb-[27rem] pt-40 overflow-hidden w-full  antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+			className="pb-[34rem] pt-40 overflow-hidden w-full  antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
 		>
 			<Header />
 			<motion.div
@@ -63,6 +71,10 @@ export const HeroParallax = ({ products }: { products: ProductType[] }) => {
 							category={item.category}
 							price={item.price}
 							stock={item.stock}
+							rating={item.rating}
+							id={item.id}
+							wishlistData={wishlistData}
+							setWishlistData={setwishlistData}
 						/>
 					))}
 				</motion.div>

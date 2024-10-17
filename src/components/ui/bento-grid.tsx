@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cn } from "@/lib/utils";
 import { Badge } from "./badge";
+import { Heart, Star, StarHalf } from "lucide-react";
+import { Dispatch } from "react";
 
 export const BentoGrid = ({
 	className,
@@ -28,6 +31,10 @@ export const BentoGridItem = ({
 	category,
 	price,
 	stock,
+	rating,
+	id,
+	wishlistData,
+	setWishlistData,
 }: {
 	className?: string;
 	title?: string;
@@ -36,7 +43,44 @@ export const BentoGridItem = ({
 	category: string;
 	price: number;
 	stock: number;
+	rating: number;
+	id: number;
+	wishlistData: number[];
+	setWishlistData: Dispatch<React.SetStateAction<number[]>>;
 }) => {
+	const renderRating = (rating: number) => {
+		const fullStars = Math.floor(rating);
+		const hasHalfStar = rating % 1 >= 0.5;
+		return (
+			<div className="flex items-center">
+				{[...Array(fullStars)].map((_, i) => (
+					<Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+				))}
+				{hasHalfStar && (
+					<StarHalf className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+				)}
+				<span className="ml-1 text-sm text-gray-600">{rating.toFixed(2)}</span>
+			</div>
+		);
+	};
+
+	const handleWhislist = (action: "add" | "remove", idProduct: number) => {
+		if (action === "add") {
+			const dataWishlist = [...wishlistData];
+			dataWishlist.push(idProduct);
+			setWishlistData(dataWishlist);
+			localStorage.setItem("whislist", JSON.stringify(dataWishlist));
+		} else {
+			const filterWishlist = wishlistData.filter((id) => id !== idProduct);
+			setWishlistData(filterWishlist);
+			localStorage.setItem("whislist", JSON.stringify(filterWishlist));
+		}
+	};
+
+	const checkWhislist = () => {
+		return wishlistData.includes(id);
+	};
+
 	return (
 		<div
 			className={cn(
@@ -44,16 +88,6 @@ export const BentoGridItem = ({
 				className
 			)}
 		>
-			{/* {header}
-			<div className="group-hover/bento:translate-x-2 transition duration-200">
-				{icon}
-				<div className="font-sans font-bold text-neutral-600 dark:text-neutral-200 mb-2 mt-2">
-					{title}
-				</div>
-				<div className="font-sans font-normal text-neutral-600 text-xs dark:text-neutral-300">
-					{description}
-				</div>
-			</div> */}
 			<div className="relative aspect-square mb-4">
 				<img
 					src={image}
@@ -61,9 +95,17 @@ export const BentoGridItem = ({
 					className="object-cover rounded-md"
 					loading="lazy"
 				/>
+				<div className="cursor-pointer absolute top-2 left-2 opacity-0 group-hover/bento:opacity-100 transition duration-200 p-1 bg-slate-100 rounded-full">
+					<Heart
+						onClick={() => handleWhislist(checkWhislist() ? "remove" : "add", id)}
+						size={20}
+						fill={checkWhislist() ? "red" : "white"}
+						stroke={checkWhislist() ? "none" : "black"}
+					/>
+				</div>
 				{discount > 0 && (
 					<Badge className="absolute top-2 right-2 bg-red-500">
-						{discount.toFixed(0)}% OFF
+						{discount.toFixed(1)}% OFF
 					</Badge>
 				)}
 			</div>
@@ -79,6 +121,7 @@ export const BentoGridItem = ({
 					</span>
 				)}
 			</div>
+			{renderRating(rating)}
 			<div className="flex items-center py-6 pt-0">
 				{stock <= 5 ? (
 					<Badge variant="destructive" className="w-full justify-center">

@@ -10,6 +10,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { FaRegHeart } from "react-icons/fa";
 
 const MainPage = () => {
 	const [data, setData] = useState<ProductType[]>([]);
@@ -63,11 +64,11 @@ const MainPage = () => {
 					opacity: isVisible ? 1 : 0,
 				}}
 				transition={{ duration: 0.5, ease: "easeOut" }}
-				className="fixed top-0 w-full z-50 flex justify-center"
+				className="fixed top-0 w-full z-50 flex justify-center items-center gap-5"
 			>
-				<div className="w-[500px] flex shadow-md rounded-lg">
+				<div className="w-[500px] flex shadow-md rounded-lg ">
 					<Select value={category} onValueChange={setCategory}>
-						<SelectTrigger className="w-[180px] rounded-r-none border-r-0">
+						<SelectTrigger className="w-[180px] rounded-r-none border-r-0 focus:ring-0 focus:outline-none focus:ring-offset-0 ">
 							<SelectValue placeholder="All categories" />
 						</SelectTrigger>
 						<SelectContent>
@@ -82,31 +83,14 @@ const MainPage = () => {
 						placeholder="Search Mockups, Logos, Design Themes..."
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
-						className=" border-l-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+						className=" border-l-0 rounded-l-none focus-visible:ring-0 focus-visible:ring-offset-0"
 					/>
+				</div>
+				<div className="p-3 bg-white shadow-md rounded-lg w-[2.5rem] hover:w-[10rem] transition-all duration-300 ease-in-out cursor-pointer">
+					<FaRegHeart />
 				</div>
 			</motion.div>
 			<HeroParallax products={data} />;
-			{/* <BentoGrid className="max-w-4xl mx-auto">
-				{data.map((item, i) => (
-					<BentoGridItem
-						key={i}
-						title={item.title}
-						description={item.description}
-						header={item.category}
-						icon={<img src={item.images[0]} className="w-24 h-24 object-contain" />}
-					/>
-				))}
-			</BentoGrid> */}
-			{/* <div className="h-full grid grid-cols-3">
-				{data.map((item) => {
-					return (
-						<div>
-							<img src={item.images[0]} alt={item.brand} loading="lazy" />
-						</div>
-					);
-				})}
-			</div> */}
 		</div>
 	);
 };
