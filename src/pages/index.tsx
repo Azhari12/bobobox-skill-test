@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { ProductType } from "../types/dummy";
-import { HeroParallax } from "@/components/ui/hero-parallax";
+// import { ProductType } from "../types/dummy";
+// import { HeroParallax } from "@/components/ui/hero-parallax";
 import { motion } from "framer-motion";
 import {
 	Select,
@@ -12,15 +12,15 @@ import {
 import { Input } from "@/components/ui/input";
 
 const MainPage = () => {
-	const [data, setData] = useState<ProductType[]>([]);
+	// const [data, setData] = useState<ProductType[]>([]);
 	const [isVisible, setIsVisible] = useState(false);
 	const [category, setCategory] = useState("all");
 	const [searchQuery, setSearchQuery] = useState("");
 
-	const [loading, setLoading] = useState(false);
+	// const [loading, setLoading] = useState(false);
 
 	const getData = () => {
-		setLoading(true);
+		// setLoading(true);
 		fetch("/src/data/dummy-data.json", {
 			headers: {
 				"Content-Type": "application/json",
@@ -32,10 +32,10 @@ const MainPage = () => {
 			})
 			.then((data) => {
 				console.log(data);
-				const dataProduct = data.products;
-				setData(dataProduct);
+				// const dataProduct = data.products;
+				// setData(dataProduct);
 			});
-		setLoading(false);
+		// setLoading(false);
 	};
 
 	useEffect(() => {
@@ -90,7 +90,7 @@ const MainPage = () => {
 					/>
 				</div>
 			</motion.div>
-			{loading ? "Loading...." : <HeroParallax products={data} />}
+			{/* {loading ? "Loading...." : <HeroParallax products={data} />} */}
 			{/* <BentoGrid className="max-w-4xl mx-auto">
 				{data.map((item, i) => (
 					<BentoGridItem
