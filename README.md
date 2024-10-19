@@ -40,7 +40,7 @@ npm run dev
 - [Framer Motion](https://www.framer.com/motion/)
 - [Zustand](https://zustand-demo.pmnd.rs/)
 - [Aceternity UI](https://ui.aceternity.com/)
-- [Shadcn]([https://ui.aceternity.com/](https://ui.shadcn.com/))
+- [Shadcn](https://ui.shadcn.com/)
 
 ## 🤖 Author
 
