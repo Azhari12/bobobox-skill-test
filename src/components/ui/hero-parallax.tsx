@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
 	motion,
 	useScroll,
@@ -7,14 +7,17 @@ import {
 	useSpring,
 	MotionValue,
 } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ProductType } from "@/types/dummy";
 import { BentoGridItem } from "./bento-grid";
+import { FlipWords } from "./flip-words";
+import { useWishlist } from "@/store/product";
 
 export const HeroParallax = ({ products }: { products: ProductType[] }) => {
 	const ref = React.useRef(null);
+	const navigate = useNavigate();
 
-	const [wishlistData, setwishlistData] = useState<number[]>([]);
+	const { wishlist, setWishlist } = useWishlist();
 
 	const { scrollYProgress } = useScroll({
 		target: ref,
@@ -35,14 +38,19 @@ export const HeroParallax = ({ products }: { products: ProductType[] }) => {
 		useTransform(scrollYProgress, [0, 0.2], [20, 0]),
 		springConfig
 	);
+
 	const translateY = useSpring(
-		useTransform(scrollYProgress, [0, 0.2], [-2000, 600]),
+		useTransform(
+			scrollYProgress,
+			[0, 0.2],
+			[(products.length / 30) * -2000, products.length ? 600 : 0]
+		),
 		springConfig
 	);
 
 	useEffect(() => {
 		const storedWhislist = localStorage.getItem("whislist");
-		setwishlistData(storedWhislist ? JSON.parse(storedWhislist) : []);
+		setWishlist(storedWhislist ? JSON.parse(storedWhislist) : []);
 	}, []);
 
 	return (
@@ -61,57 +69,47 @@ export const HeroParallax = ({ products }: { products: ProductType[] }) => {
 				}}
 				className="w-full flex justify-center items-center"
 			>
-				<motion.div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mb-20 w-3/4">
-					{products.map((item) => (
-						<BentoGridItem
-							key={item.title}
-							title={item.title}
-							image={item.thumbnail}
-							discount={item.discountPercentage}
-							category={item.category}
-							price={item.price}
-							stock={item.stock}
-							rating={item.rating}
-							id={item.id}
-							wishlistData={wishlistData}
-							setWishlistData={setwishlistData}
-						/>
-					))}
-				</motion.div>
-				{/* <motion.div className="flex flex-row  mb-20 space-x-20 ">
-					{secondRow.map((product) => (
-						<ProductCard
-							product={product}
-							translate={translateXReverse}
-							key={product.title}
-						/>
-					))}
-				</motion.div> */}
-				{/* <motion.div className="flex flex-row-reverse space-x-reverse space-x-20">
-					{thirdRow.map((product) => (
-						<ProductCard
-							product={product}
-							translate={translateX}
-							key={product.title}
-						/>
-					))}
-				</motion.div> */}
+				{products.length === 0 ? (
+					<p className=" text-center text-xl font-semibold mb-20 w-3/4">
+						No Product Found
+					</p>
+				) : (
+					<motion.div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mb-20 w-3/4">
+						{products.map((item) => (
+							<BentoGridItem
+								key={item.title}
+								product={item}
+								wishlistData={wishlist}
+								setWishlistData={setWishlist}
+								onClickCard={() => navigate(`product-detail/${item.id}`)}
+							/>
+						))}
+					</motion.div>
+				)}
 			</motion.div>
 		</div>
 	);
 };
 
 export const Header = () => {
+	const words = ["beauty", "furniture", "groceries", "fragrances"];
 	return (
 		<div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full  left-0 top-0">
 			<h1 className="text-2xl md:text-7xl font-bold dark:text-white">
 				Whole Store
 			</h1>
+			<p className="max-w-2xl text-base md:text-lg mt-8 dark:text-neutral-200">
+				Find all your essentials, from
+				<span className="text-2xl font-semibold">
+					<FlipWords words={words} />
+				</span>
+				<br />
+				to everyday items, right here at Whole Store.
+			</p>
 			<p className="max-w-2xl text-base md:text-xl mt-8 dark:text-neutral-200">
-				we provide a vast array of high-quality products across multiple categories.
-				Our commitment to quality and affordability ensures that you find everything
-				you need, from beauty essentials to everyday items. Experience convenience
-				and variety like never before at Whole Store!
+				We provide a vast array of high-quality products. Our commitment to quality
+				and affordability ensures that you find everything you need. Experience
+				convenience and variety like never before at Whole Store!
 			</p>
 		</div>
 	);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { ProductType } from "../types/dummy";
 import { HeroParallax } from "@/components/ui/hero-parallax";
@@ -10,13 +11,53 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { FaRegHeart } from "react-icons/fa";
+import WishlistModal from "./components/wishlist-modal";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const MainPage = () => {
 	const [data, setData] = useState<ProductType[]>([]);
+	const [defaultData, setDefaultData] = useState<ProductType[]>([]);
 	const [isVisible, setIsVisible] = useState(false);
 	const [category, setCategory] = useState("all");
 	const [searchQuery, setSearchQuery] = useState("");
+
+	const filterProduct = () => {
+		if (category === "all" && searchQuery === "") {
+			setData(defaultData);
+		} else {
+			let filteredData: any[] = [];
+			if (searchQuery === "") {
+				filteredData = defaultData.filter((item) => item.category === category);
+			} else if (category === "all") {
+				filteredData = defaultData.filter((item) =>
+					item.title.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+				);
+			} else {
+				filteredData = defaultData.filter(
+					(item) =>
+						item.title.toLowerCase().includes(searchQuery.toLocaleLowerCase()) &&
+						item.category === category
+				);
+			}
+			setData(filteredData);
+		}
+	};
+
+	const handleScroll = () => {
+		if (window.scrollY >= 800) {
+			setIsVisible(true);
+		} else {
+			if (data.length !== 0) {
+				setIsVisible(false);
+			} else {
+				if (window.scrollY <= 100) {
+					setIsVisible(false);
+				} else {
+					setIsVisible(true);
+				}
+			}
+		}
+	};
 
 	const getData = () => {
 		fetch("/data/dummy-data.json", {
@@ -29,9 +70,9 @@ const MainPage = () => {
 				return response.json();
 			})
 			.then((data) => {
-				console.log(data);
 				const dataProduct = data.products;
 				setData(dataProduct);
+				setDefaultData(dataProduct);
 			});
 	};
 
@@ -40,20 +81,15 @@ const MainPage = () => {
 	}, []);
 
 	useEffect(() => {
-		const handleScroll = () => {
-			if (window.scrollY >= 800) {
-				setIsVisible(true);
-			} else {
-				setIsVisible(false);
-			}
-		};
-
 		window.addEventListener("scroll", handleScroll);
-
 		return () => {
 			window.removeEventListener("scroll", handleScroll);
 		};
-	}, []);
+	}, [data]);
+
+	useEffect(() => {
+		filterProduct();
+	}, [category, searchQuery]);
 
 	return (
 		<div className="relative">
@@ -64,7 +100,7 @@ const MainPage = () => {
 					opacity: isVisible ? 1 : 0,
 				}}
 				transition={{ duration: 0.5, ease: "easeOut" }}
-				className="fixed top-0 w-full z-50 flex justify-center items-center gap-5"
+				className="fixed top-0 w-full z-50 flex justify-center items-start gap-5"
 			>
 				<div className="w-[500px] flex shadow-md rounded-lg ">
 					<Select value={category} onValueChange={setCategory}>
@@ -73,24 +109,24 @@ const MainPage = () => {
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value="all">All categories</SelectItem>
-							<SelectItem value="mockups">Mockups</SelectItem>
-							<SelectItem value="logos">Logos</SelectItem>
-							<SelectItem value="themes">Design Themes</SelectItem>
+							<SelectItem value="beauty">Beauty</SelectItem>
+							<SelectItem value="fragrances">Fragrances</SelectItem>
+							<SelectItem value="furniture">Furniture</SelectItem>
+							<SelectItem value="groceries">Groceries</SelectItem>
 						</SelectContent>
 					</Select>
 					<Input
 						type="text"
-						placeholder="Search Mockups, Logos, Design Themes..."
+						placeholder="Search Products"
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
 						className=" border-l-0 rounded-l-none focus-visible:ring-0 focus-visible:ring-offset-0"
 					/>
 				</div>
-				<div className="p-3 bg-white shadow-md rounded-lg w-[2.5rem] hover:w-[10rem] transition-all duration-300 ease-in-out cursor-pointer">
-					<FaRegHeart />
-				</div>
+				<WishlistModal />
+				<ModeToggle />
 			</motion.div>
-			<HeroParallax products={data} />;
+			<HeroParallax products={data} />
 		</div>
 	);
 };
