@@ -71,10 +71,10 @@ const ProductDetail = () => {
 
 	return (
 		<motion.div
-			initial={{ opacity: 0, y: 50 }} // Initial state, sebelum animasi dimulai
-			animate={{ opacity: 1, y: 0 }} // Target state, ketika animasi selesai
-			exit={{ opacity: 0, y: 50 }} // State ketika komponen keluar
-			transition={{ duration: 0.5, ease: "easeInOut" }} // Durasi dan easing
+			initial={{ opacity: 0, y: 50 }}
+			animate={{ opacity: 1, y: 0 }}
+			exit={{ opacity: 0, y: 50 }}
+			transition={{ duration: 0.5, ease: "easeInOut" }}
 			className=" container mx-auto p-4 shadow-lg rounded-lg"
 		>
 			<Button onClick={() => navigate("/")} variant="ghost" className="mb-4">

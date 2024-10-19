@@ -17,18 +17,11 @@ const WishlistModal = () => {
 
 	const { wishlist, setWishlist } = useWishlist();
 
-	// const [openModal, setOpenModal] = useState(false);
-
 	const removeWishlist = (idProduct: number) => {
 		const filtered = wishlist.filter((item) => item.id !== idProduct);
 		localStorage.setItem("whislist", JSON.stringify(filtered));
 		setWishlist(filtered);
 	};
-
-	// useEffect(() => {
-	// 	const storedWhislist = localStorage.getItem("whislist");
-	// 	setWishlist(storedWhislist ? JSON.parse(storedWhislist) : []);
-	// }, [openModal]);
 
 	return (
 		<Modal>
@@ -85,57 +78,10 @@ const WishlistModal = () => {
 											${(item.price * (1 - item.discountPercentage / 100)).toFixed(2)}
 										</p>
 									</DirectionAwareHover>
-									{/* <img
-									loading="lazy"
-									src={item.thumbnail}
-									alt={item.title}
-									width="500"
-									height="500"
-									className="rounded-lg h-20 w-20 md:h-40 md:w-40 object-cover flex-shrink-0"
-								/> */}
 								</motion.div>
 							))}
 						</div>
 					)}
-
-					{/* <div className="py-10 flex flex-wrap gap-x-4 gap-y-6 items-start justify-start max-w-sm mx-auto">
-						<div className="flex  items-center justify-center">
-							<PlaneIcon className="mr-1 text-neutral-700 dark:text-neutral-300 h-4 w-4" />
-							<span className="text-neutral-700 dark:text-neutral-300 text-sm">
-								5 connecting flights
-							</span>
-						</div>
-						<div className="flex items-center justify-center">
-							<ElevatorIcon className="mr-1 text-neutral-700 dark:text-neutral-300 h-4 w-4" />
-							<span className="text-neutral-700 dark:text-neutral-300 text-sm">
-								12 hotels
-							</span>
-						</div>
-						<div className="flex items-center justify-center">
-							<VacationIcon className="mr-1 text-neutral-700 dark:text-neutral-300 h-4 w-4" />
-							<span className="text-neutral-700 dark:text-neutral-300 text-sm">
-								69 visiting spots
-							</span>
-						</div>
-						<div className="flex  items-center justify-center">
-							<FoodIcon className="mr-1 text-neutral-700 dark:text-neutral-300 h-4 w-4" />
-							<span className="text-neutral-700 dark:text-neutral-300 text-sm">
-								Good food everyday
-							</span>
-						</div>
-						<div className="flex items-center justify-center">
-							<MicIcon className="mr-1 text-neutral-700 dark:text-neutral-300 h-4 w-4" />
-							<span className="text-neutral-700 dark:text-neutral-300 text-sm">
-								Open Mic
-							</span>
-						</div>
-						<div className="flex items-center justify-center">
-							<ParachuteIcon className="mr-1 text-neutral-700 dark:text-neutral-300 h-4 w-4" />
-							<span className="text-neutral-700 dark:text-neutral-300 text-sm">
-								Paragliding
-							</span>
-						</div>
-					</div> */}
 				</ModalContent>
 				<ModalFooter className="gap-4">
 					<button className="bg-black text-white dark:bg-white dark:text-black text-sm px-2 py-1 rounded-md border border-black w-28">
