@@ -1,5 +1,5 @@
 
-# BOBOBOX Skill Test! 
+# BOBOBOX Skill Test 
 
 ## 📑 About the Project
 
